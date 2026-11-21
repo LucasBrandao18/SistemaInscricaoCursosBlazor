@@ -1,12 +1,5 @@
 # Sistema de Inscrição em Cursos — Blazor Web App
 
-Lista de Exercícios de **Desenvolvimento Web** (Usabilidade, Dev. Web, Mobile e Jogos) — Prof. Daniel Henrique Matos de Paiva.
-
-Página de inscrição interativa feita com **Blazor Web App (.NET 9)**, usando:
-
-- Validação com **DataAnnotations** (`[Required]`, `[EmailAddress]`, `[Range]`)
-- Vinculação de dados com **`[SupplyParameterFromForm]`**
-- Lista de cursos com **`<InputSelect>`**
 - **Controle de estado assíncrono** com `Task.Delay(2000)` e feedback visual no botão
 
 ---
