@@ -1,0 +1,100 @@
+@page "/inscricao"
+@rendermode InteractiveServer
+@using SistemaInscricaoCursosBlazor.Components.Models
+
+<PageTitle>Inscrição em Cursos</PageTitle>
+
+<h1>Inscrição em Cursos</h1>
+<p>Preencha os dados abaixo para garantir sua vaga.</p>
+
+@if (sucesso)
+{
+    <div class="alert alert-success" role="alert">
+        Inscrição confirmada! Obrigado, <strong>@nomeConfirmado</strong>.
+        Você está inscrito(a) em <strong>@cursoConfirmado</strong>.
+    </div>
+}
+
+<EditForm Model="modelo" FormName="InscricaoForm" OnValidSubmit="EnviarAsync" class="col-md-6">
+    <DataAnnotationsValidator />
+    <ValidationSummary class="text-danger" />
+
+    <div class="mb-3">
+        <label for="nome" class="form-label">Nome</label>
+        <InputText id="nome" class="form-control" @bind-Value="modelo.Nome" />
+        <ValidationMessage For="@(() => modelo.Nome)" class="text-danger" />
+    </div>
+
+    <div class="mb-3">
+        <label for="email" class="form-label">E-mail</label>
+        <InputText id="email" type="email" class="form-control" @bind-Value="modelo.Email" />
+        <ValidationMessage For="@(() => modelo.Email)" class="text-danger" />
+    </div>
+
+    <div class="mb-3">
+        <label for="idade" class="form-label">Idade</label>
+        <InputNumber id="idade" class="form-control" @bind-Value="modelo.Idade" />
+        <ValidationMessage For="@(() => modelo.Idade)" class="text-danger" />
+    </div>
+
+    <div class="mb-3">
+        <label for="curso" class="form-label">Curso</label>
+        <InputSelect id="curso" class="form-select" @bind-Value="modelo.CursoId">
+            <option value="">-- Selecione um curso --</option>
+            @foreach (var curso in cursos)
+            {
+                <option value="@curso.Key">@curso.Value</option>
+            }
+        </InputSelect>
+        <ValidationMessage For="@(() => modelo.CursoId)" class="text-danger" />
+    </div>
+
+    <button type="submit" class="btn btn-primary" disabled="@enviando">
+        @(enviando ? "Processando..." : "Confirmar Inscrição")
+    </button>
+</EditForm>
+
+@code {
+    // Recebe os dados do formulário enviado (vinculação via [SupplyParameterFromForm]).
+    [SupplyParameterFromForm]
+    public InscricaoModel modelo { get; set; } = new();
+
+    // Variáveis de controle de estado
+    private bool enviando = false;
+    private bool sucesso = false;
+    private string? nomeConfirmado;
+    private string? cursoConfirmado;
+
+    // Opções do <InputSelect> (chave = CursoId, valor = nome exibido)
+    private readonly Dictionary<string, string> cursos = new()
+    {
+        { "dotnet", "Desenvolvimento Web com .NET" },
+        { "mobile", "Desenvolvimento Mobile" },
+        { "ux", "Usabilidade e UX Design" },
+        { "jogos", "Desenvolvimento de Jogos" }
+    };
+
+    protected override void OnInitialized()
+    {
+        // Garante que o modelo exista no primeiro carregamento da página.
+        modelo ??= new InscricaoModel();
+    }
+
+    private async Task EnviarAsync()
+    {
+        enviando = true;
+        sucesso = false;
+
+        // Simula uma requisição assíncrona (ex.: chamada a uma API).
+        await Task.Delay(2000);
+
+        nomeConfirmado = modelo.Nome;
+        cursoConfirmado = cursos[modelo.CursoId!];
+
+        enviando = false;
+        sucesso = true;
+
+        // Limpa o formulário para uma nova inscrição.
+        modelo = new InscricaoModel();
+    }
+}
